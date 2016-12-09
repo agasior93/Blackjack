@@ -1,0 +1,389 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace blackjackv2
+{
+    public partial class Form1 : Form
+    {
+        Random random = new Random();
+        public int scoreGracz = 0;
+        public int scorePrzeciwnik = 0;
+        List<Karta> taliaGracz = new List<Karta>();
+        List<Karta> taliaPrzeciwnik = new List<Karta>();        
+        List<Karta> talia = new List<Karta>();
+        List<Karta> taliaTas = new List<Karta>();
+        
+        public Form1()
+        {
+            InitializeComponent();
+            button2.Enabled = false;
+            button3.Enabled = false;
+            
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            //aktywacja przyciskow
+            button2.Enabled = true;
+            button3.Enabled = true;
+
+            //czyszczenie wynikow
+            scoreGracz = 0;
+            scorePrzeciwnik = 0;
+            talia.Clear();
+            taliaGracz.Clear();
+            taliaPrzeciwnik.Clear();
+            taliaTas.Clear();
+            listBox1.Items.Clear();
+            listBox2.Items.Clear();
+            textBox1.Clear();
+            textBox2.Clear();
+            
+
+            //wypelnianie talii
+            foreach (string figura in Karta.Figury)
+            {
+                foreach (char kolor in Karta.Kolory)
+                {
+                    talia.Add(new Karta(kolor, figura));
+                }
+            }
+
+            //tasowanie talii
+            while (talia.Count > 0)
+            {
+                int i = random.Next(talia.Count);
+                taliaTas.Add(talia[i]);
+                talia.RemoveAt(i);
+            }
+                        
+            //losowanie 4 kart i rozdawanie ich pomiedzy zawodnikow
+            taliaGracz.Add(taliaTas[taliaTas.Count - 1]);
+            taliaTas.RemoveAt(taliaTas.Count - 1);
+
+            taliaPrzeciwnik.Add(taliaTas[taliaTas.Count - 1]);
+            taliaTas.RemoveAt(taliaTas.Count - 1);
+
+            taliaGracz.Add(taliaTas[taliaTas.Count - 1]);
+            taliaTas.RemoveAt(taliaTas.Count - 1);
+
+            taliaPrzeciwnik.Add(taliaTas[taliaTas.Count - 1]);
+            taliaTas.RemoveAt(taliaTas.Count - 1);
+
+            //obliczanie wynikow
+            for (int i = 0; i < taliaGracz.Count; i++)
+            {
+                taliaGracz[i].Wynik(ref scoreGracz);
+            }
+
+            for (int i = 0; i < taliaPrzeciwnik.Count; i++)
+            {
+                taliaPrzeciwnik[i].Wynik(ref scorePrzeciwnik);
+            }
+
+            if (scoreGracz > 21 && scorePrzeciwnik > 21)
+            {
+              
+                button2.Enabled = false;
+                button3.Enabled = false;
+
+                for (int i = 0; i < taliaGracz.Count(); i++)
+                {
+                    listBox2.Items.Add(taliaGracz[i]);
+                }
+
+                textBox2.Text = scoreGracz.ToString();
+
+                for (int i = 0; i < taliaPrzeciwnik.Count(); i++)
+                {
+                    listBox1.Items.Add(taliaPrzeciwnik[i]);
+                }
+                textBox1.Text = scorePrzeciwnik.ToString();
+
+                MessageBox.Show("Pechowe rozdanie, oboje przegraliscie!");
+            }
+
+            if (scoreGracz > 21 && scorePrzeciwnik < 21)
+            {
+                
+                button2.Enabled = false;
+                button3.Enabled = false;
+
+                for (int i = 0; i < taliaGracz.Count(); i++)
+                {
+                    listBox2.Items.Add(taliaGracz[i]);
+                }
+
+                textBox2.Text = scoreGracz.ToString();
+
+                for (int i = 0; i < taliaPrzeciwnik.Count(); i++)
+                {
+                    listBox1.Items.Add(taliaPrzeciwnik[i]);
+                }
+                textBox1.Text = scorePrzeciwnik.ToString();
+
+                MessageBox.Show("Miales pecha, przeciwnik wygral w pierwszym rozdaniu!");
+            }
+
+            if (scoreGracz != 21 && scorePrzeciwnik == 21)
+            {
+
+                button2.Enabled = false;
+                button3.Enabled = false;
+
+                for (int i = 0; i < taliaGracz.Count(); i++)
+                {
+                    listBox2.Items.Add(taliaGracz[i]);
+                }
+
+                textBox2.Text = scoreGracz.ToString();
+
+                for (int i = 0; i < taliaPrzeciwnik.Count(); i++)
+                {
+                    listBox1.Items.Add(taliaPrzeciwnik[i]);
+                }
+                textBox1.Text = scorePrzeciwnik.ToString();
+
+                MessageBox.Show("Miales pecha, przeciwnik dostal oczko w pierwszym rozdaniu!");
+            }
+
+            if (scoreGracz < 21 && scorePrzeciwnik > 21)
+            {
+               
+                button2.Enabled = false;
+                button3.Enabled = false;
+
+                for (int i = 0; i < taliaGracz.Count(); i++)
+                {
+                    listBox2.Items.Add(taliaGracz[i]);
+                }
+
+                textBox2.Text = scoreGracz.ToString();
+
+                for (int i = 0; i < taliaPrzeciwnik.Count(); i++)
+                {
+                    listBox1.Items.Add(taliaPrzeciwnik[i]);
+                }
+                textBox1.Text = scorePrzeciwnik.ToString();
+
+                MessageBox.Show("Przeciwnik mial pecha, wygrales w pierwszym rozdaniu!");
+            }
+
+            if (scoreGracz == 21 && scorePrzeciwnik != 21)
+            {
+               
+                button2.Enabled = false;
+                button3.Enabled = false;
+
+                for (int i = 0; i < taliaGracz.Count(); i++)
+                {
+                    listBox2.Items.Add(taliaGracz[i]);
+                }
+
+                textBox2.Text = scoreGracz.ToString();
+
+                for (int i = 0; i < taliaPrzeciwnik.Count(); i++)
+                {
+                    listBox1.Items.Add(taliaPrzeciwnik[i]);
+                }
+                textBox1.Text = scorePrzeciwnik.ToString();
+
+                MessageBox.Show("Miales szczescie, wygrywasz w pierwszym rozdaniu!");
+            }
+           
+            //algorytm przeciwnika
+            while (scorePrzeciwnik < 15)
+            {
+                taliaPrzeciwnik.Add(taliaTas[taliaTas.Count - 1]);
+                taliaTas.RemoveAt(taliaTas.Count - 1);
+                taliaPrzeciwnik[taliaPrzeciwnik.Count-1].Wynik(ref scorePrzeciwnik);
+            }
+
+                        
+            //wyswietlanie rozdanych kart i wynikow  
+
+            for (int i = 0; i < taliaGracz.Count(); i++)
+            {
+                listBox2.Items.Add(taliaGracz[i]);
+            }
+            
+            textBox2.Text = scoreGracz.ToString();
+            
+
+           
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            taliaGracz.Add(taliaTas[taliaTas.Count - 1]);
+            taliaTas.RemoveAt(taliaTas.Count - 1);      
+                       
+            taliaGracz[taliaGracz.Count -1].Wynik(ref scoreGracz);
+
+            listBox2.Items.Add(taliaGracz[taliaGracz.Count - 1]);
+            textBox2.Text = scoreGracz.ToString();
+
+            if (scoreGracz > 21 && scorePrzeciwnik <= 21)
+            {
+                MessageBox.Show("Przegrales!");
+                button2.Enabled = false;
+                button3.Enabled = false;
+                for (int i = 0; i < taliaPrzeciwnik.Count(); i++)
+                {
+                    listBox1.Items.Add(taliaPrzeciwnik[i]);
+                }
+                textBox1.Text = scorePrzeciwnik.ToString();
+            }
+
+            if (scoreGracz > 21 && scorePrzeciwnik > 21 || scorePrzeciwnik == scoreGracz)
+            {
+                MessageBox.Show("Oboje przegraliscie!");
+                button2.Enabled = false;
+                button3.Enabled = false;
+                for (int i = 0; i < taliaPrzeciwnik.Count(); i++)
+                {
+                    listBox1.Items.Add(taliaPrzeciwnik[i]);
+                }
+                textBox1.Text = scorePrzeciwnik.ToString();
+            }
+
+            if (scoreGracz == 21 && scorePrzeciwnik != 21)
+            {
+                MessageBox.Show("Wygrales!");
+                button2.Enabled = false;
+                button3.Enabled = false;
+                for (int i = 0; i < taliaPrzeciwnik.Count(); i++)
+                {
+                    listBox1.Items.Add(taliaPrzeciwnik[i]);
+                }
+                textBox1.Text = scorePrzeciwnik.ToString();
+            }
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < taliaPrzeciwnik.Count(); i++)
+            {
+                listBox1.Items.Add(taliaPrzeciwnik[i]);
+            }
+            textBox1.Text = scorePrzeciwnik.ToString();
+
+          
+            if (scoreGracz > scorePrzeciwnik && scorePrzeciwnik < 21)
+            {
+                MessageBox.Show("Wygrales!");
+                button2.Enabled = false;
+                button3.Enabled = false;
+            }
+
+            if (scoreGracz < scorePrzeciwnik && scorePrzeciwnik > 21)
+            {
+                MessageBox.Show("Wygrales!");
+                button2.Enabled = false;
+                button3.Enabled = false;
+            }
+
+            else if (scoreGracz < scorePrzeciwnik && scorePrzeciwnik <= 21)
+            {
+                MessageBox.Show("Przegrales!");
+                button2.Enabled = false;
+                button3.Enabled = false;
+            }
+
+            else if (scoreGracz == scorePrzeciwnik)
+            {
+                MessageBox.Show("Remis!");
+                button2.Enabled = false;
+                button3.Enabled = false;
+            }
+        }
+    }
+
+    class Karta
+    {
+        public static char[] Kolory = new char[4]
+        {
+                /* trefl */
+                '\u2663',
+                /* karo */
+                '\u2665',
+                /* kier */
+                '\u2666',
+                /* pik */
+                '\u2660'
+        };
+
+        public static string[] Figury = new string[13]
+        {
+            "As", "Krol", "Dama", "Walet", "10", "9", "8", "7", "6", "5", "4", "3", "2"
+        };
+
+        public char Kolor { get; private set; }
+
+        public string Figura { get; private set; } 
+
+        public Karta(char kolor, string figura)
+        {
+            Kolor = kolor;
+            Figura = figura;            
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0}{1}", Kolor, Figura);
+        }
+
+        public void Wynik(ref int score)
+        {
+            if (Figura.Equals("As"))
+            {
+                score += 11;
+            }
+
+            if (Figura.Equals("Krol") || Figura.Equals("Dama") || Figura.Equals("Walet") || Figura.Equals("10") )
+            {
+                score += 10;
+            }
+
+            if (Figura.Equals("9"))
+                score += 9;
+            if (Figura.Equals("8"))
+                score += 8;
+            if (Figura.Equals("7"))
+                score += 7;
+            if (Figura.Equals("6"))
+                score += 6;
+            if (Figura.Equals("5"))
+                score += 5;
+            if (Figura.Equals("4"))
+                score += 4;
+            if (Figura.Equals("3"))
+                score += 3;
+            if (Figura.Equals("2"))
+                score += 2;
+            
+           
+
+        }
+
+      
+     }
+}
