@@ -1,0 +1,72 @@
+namespace blackjackv2
+{
+    class Karta
+    {
+        public static char[] Kolory = new char[4]
+        {
+                /* trefl */
+                '\u2663',
+                /* karo */
+                '\u2665',
+                /* kier */
+                '\u2666',
+                /* pik */
+                '\u2660'
+        };
+
+        public static string[] Figury = new string[13]
+        {
+            "As", "Krol", "Dama", "Walet", "10", "9", "8", "7", "6", "5", "4", "3", "2"
+        };
+
+        public char Kolor { get; private set; }
+
+        public string Figura { get; private set; } 
+
+        public Karta(char kolor, string figura)
+        {
+            Kolor = kolor;
+            Figura = figura;            
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0}{1}", Kolor, Figura);
+        }
+
+        public void Wynik(ref int score)
+        {
+            if (Figura.Equals("As"))
+            {
+                score += 11;
+            }
+
+            if (Figura.Equals("Krol") || Figura.Equals("Dama") || Figura.Equals("Walet") || Figura.Equals("10") )
+            {
+                score += 10;
+            }
+
+            if (Figura.Equals("9"))
+                score += 9;
+            if (Figura.Equals("8"))
+                score += 8;
+            if (Figura.Equals("7"))
+                score += 7;
+            if (Figura.Equals("6"))
+                score += 6;
+            if (Figura.Equals("5"))
+                score += 5;
+            if (Figura.Equals("4"))
+                score += 4;
+            if (Figura.Equals("3"))
+                score += 3;
+            if (Figura.Equals("2"))
+                score += 2;
+            
+           
+
+        }
+
+      
+     }
+}
